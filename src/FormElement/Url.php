@@ -2,7 +2,12 @@
 
 namespace Xtreamwayz\HTMLFormValidator\FormElement;
 
+use Xtreamwayz\HTMLFormValidator\FormElement\Mixin\MinLengthMaxLengthMixin;
+use Xtreamwayz\HTMLFormValidator\FormElement\Mixin\MinLengthMaxLengthTrait;
+use Xtreamwayz\HTMLFormValidator\FormElement\Mixin\PatternMixin;
+use Xtreamwayz\HTMLFormValidator\FormElement\Mixin\PatternTrait;
 use Zend\Filter\StripNewlines;
+use Zend\Validator\Regex;
 
 class Url extends AbstractFormElement
 {
@@ -21,17 +26,7 @@ class Url extends AbstractFormElement
     {
         $this->attachValidatorByName('uri');
 
-        if ($this->element->hasAttribute('minlength') || $this->element->hasAttribute('maxlength')) {
-            $this->attachValidatorByName('stringlength', [
-                'min'      => $this->element->getAttribute('minlength') ?: 0,
-                'max'      => $this->element->getAttribute('maxlength') ?: null,
-            ]);
-        }
-
-        if ($this->element->hasAttribute('pattern')) {
-            $this->attachValidatorByName('regex', [
-                'pattern' => sprintf('/%s/', $this->element->getAttribute('pattern')),
-            ]);
-        }
+        MinLengthMaxLengthMixin::parse($this->element, $this->input);
+        PatternMixin::parse($this->element, $this->input);
     }
 }

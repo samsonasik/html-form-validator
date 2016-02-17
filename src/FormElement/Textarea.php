@@ -2,6 +2,8 @@
 
 namespace Xtreamwayz\HTMLFormValidator\FormElement;
 
+use Xtreamwayz\HTMLFormValidator\FormElement\Mixin\MinLengthMaxLengthMixin;
+
 class Textarea extends AbstractFormElement
 {
     /**
@@ -16,11 +18,6 @@ class Textarea extends AbstractFormElement
      */
     protected function attachDefaultValidators()
     {
-        if ($this->element->hasAttribute('minlength') || $this->element->hasAttribute('maxlength')) {
-            $this->attachValidatorByName('stringlength', [
-                'min'      => $this->element->getAttribute('minlength') ?: 0,
-                'max'      => $this->element->getAttribute('maxlength') ?: null,
-            ]);
-        }
+        MinLengthMaxLengthMixin::parse($this->element, $this->input);
     }
 }

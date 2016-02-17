@@ -2,6 +2,8 @@
 
 namespace Xtreamwayz\HTMLFormValidator\FormElement;
 
+use Xtreamwayz\HTMLFormValidator\FormElement\Mixin\MinLengthMaxLengthMixin;
+use Xtreamwayz\HTMLFormValidator\FormElement\Mixin\PatternMixin;
 use Zend\Filter\StripNewlines;
 
 class Password extends AbstractFormElement
@@ -19,17 +21,7 @@ class Password extends AbstractFormElement
      */
     protected function attachDefaultValidators()
     {
-        if ($this->element->hasAttribute('minlength') || $this->element->hasAttribute('maxlength')) {
-            $this->attachValidatorByName('stringlength', [
-                'min'      => $this->element->getAttribute('minlength') ?: 0,
-                'max'      => $this->element->getAttribute('maxlength') ?: null,
-            ]);
-        }
-
-        if ($this->element->hasAttribute('pattern')) {
-            $this->attachValidatorByName('regex', [
-                'pattern' => sprintf('/%s/', $this->element->getAttribute('pattern')),
-            ]);
-        }
+        MinLengthMaxLengthMixin::parse($this->element, $this->input);
+        PatternMixin::parse($this->element, $this->input);
     }
 }
